@@ -23,7 +23,7 @@ import org.jdom2.input.SAXBuilder;
 public class Mmapper extends Mapper<Object, Text, IntWritable, Text>
 {
 	@Override
-    protected void map(Object key, Text value, Mapper.Context context) throws IOException, InterruptedException 
+    protected void map(Object key, Text value, Context context) throws IOException, InterruptedException 
     {
         String line = value.toString();
         StringTokenizer stringTokenizer = new StringTokenizer(line);
@@ -31,7 +31,6 @@ public class Mmapper extends Mapper<Object, Text, IntWritable, Text>
             int number = -1; 
             String word = "empty";
 
-            try {   
             if(stringTokenizer.hasMoreTokens())
             {
                 String str0= stringTokenizer.nextToken();
@@ -45,11 +44,6 @@ public class Mmapper extends Mapper<Object, Text, IntWritable, Text>
             }
 
             context.write(new IntWritable(number), new Text(word));
-            }
-            catch (NumberFormatException nfe)
-            {
-            	System.out.println((int)key );
-            }
         }
 
     }

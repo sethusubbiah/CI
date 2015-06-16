@@ -2,7 +2,6 @@ package com.CI.app;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,14 +9,12 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 
 /**
  *
@@ -31,7 +28,7 @@ public class MyParserMapper   extends
 
 	@SuppressWarnings("unchecked")
 	@Override
-    protected void map(LongWritable key, Text value1, Mapper.Context context )
+    protected void map(LongWritable key, Text value1, Context context )
 throws IOException, InterruptedException {
 
             String xmlString = value1.toString();

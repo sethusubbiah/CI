@@ -33,7 +33,7 @@ throws IOException, InterruptedException {
 
             String xmlString = value1.toString();
             Configuration conf =  context.getConfiguration();
-            String Company = conf.get("company");
+            String Company = conf.get("additionalip");
              
              SAXBuilder builder = new SAXBuilder();
             Reader in = new StringReader(xmlString);

@@ -41,14 +41,22 @@ Configuration conf = new Configuration();
 conf.set("xmlinput.start", "<us-patent-grant");
 conf.set("xmlinput.end", "</us-patent-grant>");
 conf.set("io.serializations","org.apache.hadoop.io.serializer.JavaSerialization,org.apache.hadoop.io.serializer.WritableSerialization");
-conf.set("company", company);
+conf.set("additionalip", company);
 
 Job job = new Job(conf, "testJob");
 
 
 FileInputFormat.setInputPaths(job, input);
 job.setJarByClass(ParserDriver.class);
-if (type.equals("filter"))
+if (type.equals("revmap"))
+{
+	job.setMapperClass(Rmapper.class);
+	job.setReducerClass(Rreducer.class);
+	job.setInputFormatClass(XmlInputFormat.class);
+	job.setOutputKeyClass(Text.class);
+	job.setOutputValueClass(IntWritable.class);
+}
+else if (type.equals("filter"))
 {
 	job.setMapperClass(MyParserMapper.class);
 	job.setReducerClass(MyParserReducer.class);

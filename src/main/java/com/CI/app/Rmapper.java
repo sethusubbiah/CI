@@ -1,4 +1,5 @@
 package com.CI.app;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -20,20 +21,19 @@ import org.jdom2.input.SAXBuilder;
  *
  * @author root
  */
-public class MyParserMapper   extends
+public class Rmapper   extends
     Mapper<LongWritable, Text, Text, IntWritable> {
 
 	private final static IntWritable one = new IntWritable(1);
 	private final static IntWritable zero = new IntWritable(0);
 
-	@SuppressWarnings("unchecked")
 	@Override
     protected void map(LongWritable key, Text value1, Context context )
 throws IOException, InterruptedException {
 
             String xmlString = value1.toString();
             Configuration conf =  context.getConfiguration();
-            String Company = conf.get("additionalip");
+            String classification = conf.get("additionalip");
              
              SAXBuilder builder = new SAXBuilder();
             Reader in = new StringReader(xmlString);
@@ -56,28 +56,31 @@ throws IOException, InterruptedException {
             	{
             		a= a.getChild("assignee");
             		if (a!=null)
-            		{	
-            				a = a.getChild("addressbook");
-            				if(a!=null)
-            				{
-            					a =a.getChild("orgname");
-            					if (a !=null)
-            						company = a.getTextTrim();
-            				}
+            		{
+            			a = a.getChild("addressbook");
+            			if(a!=null)
+            			{
+            				a =a.getChild("orgname");
+            				if (a !=null)
+            					company = a.getTextTrim();
+            			}
             		}
             	}
             }
             
             tag2 = org.apache.commons.lang.StringUtils.deleteWhitespace(tag2);
-            if(company == null)
-            	context.write(new Text(tag2),zero);
-            
-            if (company != null && company.indexOf(Company) > -1)
+            Text texttag;
+            if (company == null)
+            	texttag = new Text(tag1.replace(" ", "-")+"("+company+")");
+            else
+            	texttag = new Text(tag1.replace(" ", "-")+"("+company.replace(" ", "-")+")");
+
+            if(tag2.equals(classification))
             {
-            	context.write(new Text(tag2), one);
+            	context.write(texttag, one);
             }
             else
-            	context.write(new Text(tag2), zero);
+            	context.write(texttag, zero);
 
         } catch (JDOMException ex) {
             Logger.getLogger(MyParserMapper.class.getName()).log(Level.SEVERE, null, ex);
